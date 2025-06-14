@@ -5,6 +5,7 @@
 package ffos.skroflin.service;
 
 import ffos.skroflin.model.Salon;
+import ffos.skroflin.model.Vozilo;
 import ffos.skroflin.model.dto.SalonDTO;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,12 @@ public class SalonService extends GlavniService{
     
     public Salon getBySifra(int sifra){
         return session.get(Salon.class, sifra);
+    }
+    
+    public List<Vozilo> getVozila(int sifra){
+        return session.createQuery("from vozilo v where o.salon.sifra =:sifra", Vozilo.class)
+                .setParameter("sifra", sifra)
+                .list();
     }
     
     public Salon post(SalonDTO o){
