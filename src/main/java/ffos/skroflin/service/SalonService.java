@@ -4,10 +4,45 @@
  */
 package ffos.skroflin.service;
 
+import ffos.skroflin.model.Salon;
+import ffos.skroflin.model.dto.SalonDTO;
+import java.util.List;
+import org.springframework.stereotype.Service;
+
 /**
  *
  * @author svenk
  */
-public class SalonService {
+@Service
+public class SalonService extends GlavniService{
+    public List<Salon> getAll(){
+        return session.createQuery("from salon", Salon.class).list();
+    }
     
+    public Salon getBySifra(int sifra){
+        return session.get(Salon.class, sifra);
+    }
+    
+    public Salon post(SalonDTO o){
+        Salon salon = new Salon(o.naziv(), o.lokacija());
+        session.beginTransaction();
+        session.persist(salon);
+        session.getTransaction().commit();
+        return salon;
+    }
+    
+    public void put(int sifra, SalonDTO o){
+        session.beginTransaction();
+        Salon s = (Salon) session.get(Salon.class, sifra);
+        s.setNaziv(o.naziv());
+        s.setLokacija(o.lokacija());
+        session.persist(s);
+        session.getTransaction().commit();
+    }
+    
+    public void delete(int sifra){
+        session.beginTransaction();
+        session.remove(session.get(Salon.class, sifra));
+        session.getTransaction().commit();
+    }
 }

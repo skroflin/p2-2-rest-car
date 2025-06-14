@@ -48,6 +48,10 @@ public class Servis extends Entitet{
     public void setDatum(Date datum) {
         this.datum = datum;
     }
+    
+    public void postaviAutomatskiDatum(){
+        this.datum = new Date();
+    }
 
     public BigDecimal getCijena() {
         return cijena;
