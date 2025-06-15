@@ -61,7 +61,7 @@ public class VoziloService extends GlavniService{
     }
     
     public boolean isBrisanje(int sifra){
-        List<Servis> servisi = session.createQuery("from servis s join s.vozilo.sifra=:sifra", Servis.class)
+        List<Servis> servisi = session.createQuery("from servis s where s.vozilo.sifra = :sifra", Servis.class)
                 .setParameter("sifra", sifra)
                 .list();
         
