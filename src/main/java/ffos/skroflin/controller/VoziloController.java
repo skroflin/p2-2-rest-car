@@ -227,4 +227,36 @@ public class VoziloController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    
+    @Operation(
+            summary = "Kreira nova vozila sa slučajni podacima",
+            tags = {"post", "vozilo"},
+            description = "Kreira onoliko vozila koliko primi kroz parametar sa slučajnim podacima koristeći Faker biblioteku", parameters = {
+                @Parameter(
+                        name = "broj",
+                        allowEmptyValue = false,
+                        required = true,
+                        description = "Broj vozila koji će biti kreirani",
+                        example = "10"
+                )})
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Kreirano", content = @Content(schema = @Schema(implementation = String.class), mediaType = "text/html")),
+        @ApiResponse(responseCode = "400", description = "Loš zahtjev (nije primljen broj koliko odjela treba dodati)", content = @Content(schema = @Schema(implementation = String.class), mediaType = "text/html")),
+        @ApiResponse(responseCode = "500", description = "Interna pogreška servera", content = @Content(schema = @Schema(implementation = String.class), mediaType = "text/html"))
+    })
+    @PostMapping("/masovnoDodavanje")
+    public ResponseEntity masovnoDodavanje(
+            @RequestParam int broj
+    ) {
+        try {
+            if (broj <= 0) {
+                return new ResponseEntity<>("Broj mora biti veći od nule." + " " + broj, HttpStatus.BAD_REQUEST);
+            }
+
+            voziloService.masovnoDodavanje(broj);
+            return new ResponseEntity<>("Uspješno dodan" + " " + broj + " " + "vozila", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

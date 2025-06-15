@@ -26,7 +26,7 @@ public class SalonService extends GlavniService{
     }
     
     public List<Vozilo> getVozila(int sifra){
-        return session.createQuery("from vozilo v where o.salon.sifra =:sifra", Vozilo.class)
+        return session.createQuery("from vozilo v where v.salon.sifra =:sifra", Vozilo.class)
                 .setParameter("sifra", sifra)
                 .list();
     }
