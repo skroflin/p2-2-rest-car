@@ -4,6 +4,7 @@
  */
 package ffos.skroflin.service;
 
+import com.github.javafaker.Faker;
 import ffos.skroflin.model.Salon;
 import ffos.skroflin.model.Vozilo;
 import ffos.skroflin.model.dto.SalonDTO;
@@ -50,6 +51,17 @@ public class SalonService extends GlavniService{
     public void delete(int sifra){
         session.beginTransaction();
         session.remove(session.get(Salon.class, sifra));
+        session.getTransaction().commit();
+    }
+    
+    public void masovnoDodavanje(int broj){
+        Salon s;
+        Faker f = new Faker();
+        session.beginTransaction();
+        for (int i = 0; i < broj; i++) {
+            s = new Salon(f.company().name(), f.address().cityName());
+            session.persist(s);
+        }
         session.getTransaction().commit();
     }
 }

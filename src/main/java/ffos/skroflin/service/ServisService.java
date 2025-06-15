@@ -4,10 +4,13 @@
  */
 package ffos.skroflin.service;
 
+import com.github.javafaker.Faker;
 import ffos.skroflin.model.Servis;
 import ffos.skroflin.model.Vozilo;
 import ffos.skroflin.model.dto.ServisDTO;
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import org.springframework.stereotype.Service;
 
 /**
@@ -50,6 +53,21 @@ public class ServisService extends GlavniService{
     public void delete(int sifra){
         session.beginTransaction();
         session.remove(session.get(Servis.class, sifra));
+        session.getTransaction().commit();
+    }
+    
+    public void masovnoDodavanje(int broj){
+        Servis s;
+        Faker f = new Faker();
+        BigDecimal cijena = BigDecimal.valueOf(f.number().randomDouble(2, 100, 10000));
+        int maksVoziloSifra = 5;
+        session.beginTransaction();
+        for (int i = 0; i < broj; i++) {
+            int sifraVozila = f.number().numberBetween(1, maksVoziloSifra);
+            Vozilo v = session.get(Vozilo.class, sifraVozila);
+            s = new Servis(f.lorem().sentence(), f.date().past(1000, TimeUnit.DAYS), cijena, v);
+            session.persist(s);
+        }
         session.getTransaction().commit();
     }
 }

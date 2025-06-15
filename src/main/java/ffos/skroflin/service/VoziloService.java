@@ -4,10 +4,12 @@
  */
 package ffos.skroflin.service;
 
+import com.github.javafaker.Faker;
 import ffos.skroflin.model.Salon;
 import ffos.skroflin.model.Servis;
 import ffos.skroflin.model.Vozilo;
 import ffos.skroflin.model.dto.VoziloDTO;
+import java.math.BigDecimal;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
@@ -64,5 +66,20 @@ public class VoziloService extends GlavniService{
                 .list();
         
         return servisi == null || servisi.isEmpty();
+    }
+    
+    public void masovnoDodavanje(int broj){
+        Vozilo v;
+        Faker f = new Faker();
+        int maksSalonSifra = 5;
+        BigDecimal cijena = BigDecimal.valueOf(f.number().randomDouble(2, 12000, 50000));
+        session.beginTransaction();
+        for (int i = 0; i < broj; i++) {
+            int sifraSalona = f.number().numberBetween(1, maksSalonSifra);
+            Salon s = session.get(Salon.class, sifraSalona);
+            v = new Vozilo(f.company().name(), f.commerce().productName(), f.number().numberBetween(1990, 2025), cijena, s);
+            session.persist(v);
+        }
+        session.getTransaction().commit();
     }
 }
