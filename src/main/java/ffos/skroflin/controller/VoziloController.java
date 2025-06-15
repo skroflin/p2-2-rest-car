@@ -4,7 +4,6 @@
  */
 package ffos.skroflin.controller;
 
-import ffos.skroflin.model.Salon;
 import ffos.skroflin.model.Vozilo;
 import ffos.skroflin.model.dto.VoziloDTO;
 import ffos.skroflin.service.VoziloService;
@@ -16,7 +15,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
