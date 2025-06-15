@@ -133,7 +133,7 @@ public class SalonController {
     @Operation(
             summary = "Mijenja podatke o salonu",
             tags = {"put", "salon"},
-            description = "Mijenja podatke o salonu. Naziv i lokacija tvrtke salona!",
+            description = "Mijenja podatke o salonu. Naziv i lokacija salona obavezno!",
             parameters = {
                 @Parameter(
                         name = "sifra",
@@ -210,7 +210,7 @@ public class SalonController {
             
             Salon s = salonService.getBySifra(sifra);
             if (s == null) {
-                return new ResponseEntity<>("Ne postoji salon s navedenom šifrom" + " " + sifra + " " +  ",nije moguće obrisati!", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>("Ne postoji salon s navedenom šifrom" + " " + sifra + " " +  ", nije moguće obrisati!", HttpStatus.BAD_REQUEST);
             }
             
             List<Vozilo> vozila = salonService.getVozila(sifra);

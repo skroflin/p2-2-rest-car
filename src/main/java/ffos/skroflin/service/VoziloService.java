@@ -5,6 +5,7 @@
 package ffos.skroflin.service;
 
 import ffos.skroflin.model.Salon;
+import ffos.skroflin.model.Servis;
 import ffos.skroflin.model.Vozilo;
 import ffos.skroflin.model.dto.VoziloDTO;
 import java.util.List;
@@ -55,5 +56,13 @@ public class VoziloService extends GlavniService{
         session.beginTransaction();
         session.remove(session.get(Vozilo.class, sifra));
         session.getTransaction().commit();
+    }
+    
+    public boolean isBrisanje(int sifra){
+        List<Servis> servisi = session.createQuery("from servis s join s.vozilo.sifra=:sifra", Servis.class)
+                .setParameter("sifra", sifra)
+                .list();
+        
+        return servisi == null || servisi.isEmpty();
     }
 }
