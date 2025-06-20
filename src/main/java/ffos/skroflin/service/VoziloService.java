@@ -82,4 +82,44 @@ public class VoziloService extends GlavniService{
         }
         session.getTransaction().commit();
     }
+    
+    public List<Vozilo> getBySalon(int sifraSalona){
+        session.beginTransaction();
+        List<Vozilo> vozila = session.createQuery(
+                "from vozilo v where v.salon.sifra = :sifra", Vozilo.class)
+                .setParameter("sifra", sifraSalona)
+                .list();
+        session.getTransaction().commit();
+        return vozila;
+    }
+    
+    public List<Vozilo> getNajskuplje(){
+        session.beginTransaction();
+        List<Vozilo> vozila = session.createQuery(
+                "from vozilo v order by v.cijena desc", Vozilo.class)
+                .setMaxResults(1)
+                .list();
+        session.getTransaction().commit();
+        return vozila;
+    }
+    
+    public List<Vozilo> getByGodina(int godina){
+        session.beginTransaction();
+        List<Vozilo> vozila = session.createQuery(
+                "from vozilo v where v.godinaProizvodnje = :godina", Vozilo.class)
+                .setParameter("godina", godina)
+                .list();
+        session.getTransaction().commit();
+        return vozila;
+    }
+    
+    public BigDecimal prosjecnaCijenaUSalonu(int salonSifra){
+        session.beginTransaction();
+        Double prosjek = session.createQuery(
+                "select avg(cijena) from vozilo v where v.salon.sifra = :sifra", Double.class)
+                .setParameter("sifra", salonSifra)
+                .uniqueResult();
+        session.getTransaction().commit();
+        return prosjek == null ? null : BigDecimal.valueOf(prosjek);
+    }
 }

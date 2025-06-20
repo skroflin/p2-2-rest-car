@@ -259,4 +259,68 @@ public class VoziloController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @Operation(
+            summary = "Dohvaća sva vozila po salonu", tags = {"getBySalon", "vozilo", "salon"},
+            description = "Dohvaća sva vozila po salonu sa svim podacima"
+    )
+    @ApiResponses(
+            value = {
+                @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Vozilo.class)))),
+                @ApiResponse(responseCode = "500", description = "Interna pogreška servera", content = @Content(schema = @Schema(implementation = String.class), mediaType = "text/html"))
+            })
+    @GetMapping("/getBySalon")
+    public ResponseEntity<?> getBySalon(
+            @RequestParam int sifraSalon
+    ){
+        try {
+            if(sifraSalon <= 0){
+                return new ResponseEntity<>("Šifra salona ne smije biti manja od 0" + " " + sifraSalon, HttpStatus.BAD_REQUEST);
+            }
+            return new ResponseEntity<>(voziloService.getBySalon(sifraSalon), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    
+    @Operation(
+            summary = "Dohvaća najskuplja vozila", tags = {"getNajskuplje", "vozilo"},
+            description = "Dohvaća sva najskuplja vozila sa svim podacima"
+    )
+    @ApiResponses(
+            value = {
+                @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Vozilo.class)))),
+                @ApiResponse(responseCode = "500", description = "Interna pogreška servera", content = @Content(schema = @Schema(implementation = String.class), mediaType = "text/html"))
+            })
+    @GetMapping("/getNajskuplje")
+    public ResponseEntity<?> getNajskuplje(){
+        try {
+            return new ResponseEntity<>(voziloService.getNajskuplje(), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    
+    @Operation(
+            summary = "Dohvaća sva vozila po godini", tags = {"getByGodina", "vozilo"},
+            description = "Dohvaća sva vozila po godini sa svim podacima"
+    )
+    @ApiResponses(
+            value = {
+                @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Vozilo.class)))),
+                @ApiResponse(responseCode = "500", description = "Interna pogreška servera", content = @Content(schema = @Schema(implementation = String.class), mediaType = "text/html"))
+            })
+    @GetMapping("/getByGodina")
+    public ResponseEntity<?> getByGodina(
+            @RequestParam int godina
+    ){
+        try {
+            if (godina <= 0) {
+                return new ResponseEntity<>("Godina ne smije biti manja ili jednaka nuli!" + " " + godina, HttpStatus.BAD_REQUEST);
+            }
+            return new ResponseEntity<>(voziloService.getByGodina(godina), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
