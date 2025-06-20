@@ -323,4 +323,27 @@ public class VoziloController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    
+    @Operation(
+            summary = "Dohvaća prosječnu cijenu vozila u salonu", tags = {"getProsjecnaCijena", "vozilo"},
+            description = "Dohvaća prosječnu cijenu vozila u salonu sa svim podacima"
+    )
+    @ApiResponses(
+            value = {
+                @ApiResponse(responseCode = "200", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Vozilo.class)))),
+                @ApiResponse(responseCode = "500", description = "Interna pogreška servera", content = @Content(schema = @Schema(implementation = String.class), mediaType = "text/html"))
+            })
+    @GetMapping("/getProsjecnaCijena")
+    public ResponseEntity <?> getProsjecnaCijena(
+            @RequestParam int salonSifra
+    ){
+        try {
+            if (salonSifra <= 0) {
+                return new ResponseEntity<>("Šifra salona ne smije biti manja ili jednaka 0!" + " " + salonSifra, HttpStatus.BAD_REQUEST);
+            }
+            return new ResponseEntity<>(voziloService.getProsjecnaCijenaUSalonu(salonSifra), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
