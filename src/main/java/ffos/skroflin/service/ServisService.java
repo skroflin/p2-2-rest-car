@@ -9,6 +9,9 @@ import ffos.skroflin.model.Servis;
 import ffos.skroflin.model.Vozilo;
 import ffos.skroflin.model.dto.ServisDTO;
 import java.math.BigDecimal;
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import org.springframework.stereotype.Service;
@@ -69,5 +72,36 @@ public class ServisService extends GlavniService{
             session.persist(s);
         }
         session.getTransaction().commit();
+    }
+    
+    public List<Servis> getByVozilo(int sifraVozilo){
+        session.beginTransaction();
+        List<Servis> servisi = session.createQuery(
+                "from servis s where s.vozilo.sifra = :sifra", Servis.class)
+                .setParameter("sifra", sifraVozilo)
+                .list();
+        session.getTransaction().commit();
+        return servisi;
+    }
+    
+    public Servis getNajskupljiServisUSalonu(int sifraSalon){
+        session.beginTransaction();
+        Servis servis = session.createQuery(
+                "from servis s where s.vozilo.sifra = :sifra order by s.cijena desc", Servis.class)
+                .setParameter("sifra", sifraSalon)
+                .setMaxResults(1)
+                .uniqueResult();
+        session.getTransaction().commit();
+        return servis;
+    }
+    
+    public BigDecimal prosjecnaCijenaServisaZaVozilo(int sifraVozila){
+        session.beginTransaction();
+        BigDecimal prosjek = session.createQuery(
+                "select avg(s.cijena) from servis s where s.vozilo.sifra = :sifra", BigDecimal.class)
+                .setParameter("sifra", sifraVozila)
+                .uniqueResult();
+        session.getTransaction().commit();
+        return prosjek;
     }
 }

@@ -246,4 +246,18 @@ public class ServisController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    
+    @GetMapping("/getByVozilo")
+    public ResponseEntity getByVozilo(
+            @RequestParam int sifraVozilo
+    ){
+        try {
+            if (sifraVozilo <= 0) {
+                return new ResponseEntity<>("Šifra vozila ne smije biti manja ili jednaka 0!" + " " + sifraVozilo, HttpStatus.BAD_REQUEST);
+            }
+            return new ResponseEntity<>(servisService.getByVozilo(sifraVozilo), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
