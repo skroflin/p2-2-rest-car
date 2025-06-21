@@ -95,7 +95,7 @@ public class ServisService extends GlavniService{
         return servis;
     }
     
-    public BigDecimal prosjecnaCijenaServisaZaVozilo(int sifraVozila){
+    public BigDecimal getProsjecnaCijenaServisaZaVozilo(int sifraVozila){
         session.beginTransaction();
         BigDecimal prosjek = session.createQuery(
                 "select avg(s.cijena) from servis s where s.vozilo.sifra = :sifra", BigDecimal.class)

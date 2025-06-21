@@ -247,6 +247,25 @@ public class ServisController {
         }
     }
     
+    @Operation(
+            summary = "Dohvaća sve servise po vozilu",
+            description = "Dohvaća sve servis po danoj šifri vozili sa svim svojim pripadajućim podacima. "
+            + "Ukoliko ne postoji servis za danu šifru vraća prazan odgovor",
+            tags = {"servis", "getBy"},
+            parameters = {
+                @Parameter(
+                        name = "sifraVozilo",
+                        allowEmptyValue = false,
+                        required = true,
+                        description = "Primarni ključ vozila u bazi podataka, mora biti veći od nula",
+                        example = "1"
+                )})
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = Servis.class), mediaType = "application/json")),
+        @ApiResponse(responseCode = "204", description = "Ne postoji servis za danu šifru", content = @Content(schema = @Schema(implementation = String.class), mediaType = "text/html")),
+        @ApiResponse(responseCode = "400", description = "Šifra mora biti veća od nula", content = @Content(schema = @Schema(implementation = String.class), mediaType = "text/html")),
+        @ApiResponse(responseCode = "500", description = "Interna pogreška servera", content = @Content(schema = @Schema(implementation = String.class), mediaType = "text/html"))
+    })
     @GetMapping("/getByVozilo")
     public ResponseEntity getByVozilo(
             @RequestParam int sifraVozilo
@@ -256,6 +275,72 @@ public class ServisController {
                 return new ResponseEntity<>("Šifra vozila ne smije biti manja ili jednaka 0!" + " " + sifraVozilo, HttpStatus.BAD_REQUEST);
             }
             return new ResponseEntity<>(servisService.getByVozilo(sifraVozilo), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    
+    @Operation(
+            summary = "Dohvaća najskuplji servis po šifri",
+            description = "Dohvaća najskuplji servis u salonu po danoj šifri sa svim svojim pripadajućim podacima. "
+            + "Ukoliko ne postoji salon za danu šifru vraća prazan odgovor",
+            tags = {"servis", "getBy"},
+            parameters = {
+                @Parameter(
+                        name = "sifraSalona",
+                        allowEmptyValue = false,
+                        required = true,
+                        description = "Primarni ključ salona u bazi podataka, mora biti veći od nula",
+                        example = "1"
+                )})
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = Servis.class), mediaType = "application/json")),
+        @ApiResponse(responseCode = "204", description = "Ne postoji servis za danu šifru", content = @Content(schema = @Schema(implementation = String.class), mediaType = "text/html")),
+        @ApiResponse(responseCode = "400", description = "Šifra mora biti veća od nula", content = @Content(schema = @Schema(implementation = String.class), mediaType = "text/html")),
+        @ApiResponse(responseCode = "500", description = "Interna pogreška servera", content = @Content(schema = @Schema(implementation = String.class), mediaType = "text/html"))
+    })
+    @GetMapping("/getNajskupljiServisUSalonu")
+    public ResponseEntity getNajskupljiServisUSalonu(
+            @RequestParam int sifraSalona
+    ){
+        try {
+            if (sifraSalona <= 0) {
+                return new ResponseEntity<>("Šifra salona ne smije biti manja ili jednaka 0." + " " + sifraSalona, HttpStatus.BAD_REQUEST);
+            }
+            return new ResponseEntity<>(servisService.getNajskupljiServisUSalonu(sifraSalona), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    
+    @Operation(
+            summary = "Dohvaća prosječnu cijenu servisa po šifri",
+            description = "Dohvaća prosječnu cijenu servisa za vozilo, po danoj šifri sa svim svojim pripadajućim podacima. "
+            + "Ukoliko ne postoji vozilo za danu šifru vraća prazan odgovor",
+            tags = {"servis", "getBy"},
+            parameters = {
+                @Parameter(
+                        name = "sifraVozila",
+                        allowEmptyValue = false,
+                        required = true,
+                        description = "Primarni ključ vozila u bazi podataka, mora biti veći od nula",
+                        example = "1"
+                )})
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = Servis.class), mediaType = "application/json")),
+        @ApiResponse(responseCode = "204", description = "Ne postoji servis za danu šifru", content = @Content(schema = @Schema(implementation = String.class), mediaType = "text/html")),
+        @ApiResponse(responseCode = "400", description = "Šifra mora biti veća od nula", content = @Content(schema = @Schema(implementation = String.class), mediaType = "text/html")),
+        @ApiResponse(responseCode = "500", description = "Interna pogreška servera", content = @Content(schema = @Schema(implementation = String.class), mediaType = "text/html"))
+    })
+    @GetMapping("/getProsjecnaCijenaServisaZaVozilo")
+    public ResponseEntity getProsjecnaCijenaServisaZaVozilo(
+            @RequestParam int sifraVozila
+    ){
+        try {
+            if (sifraVozila <= 0) {
+                return new ResponseEntity<>("Šifra vozila ne smije biti manja ili jednaka 0!" + " " + sifraVozila, HttpStatus.BAD_REQUEST); 
+            }
+            return new ResponseEntity<>(servisService.getProsjecnaCijenaServisaZaVozilo(sifraVozila), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
